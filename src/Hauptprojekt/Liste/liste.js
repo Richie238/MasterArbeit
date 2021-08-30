@@ -42,6 +42,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 
+import {API, graphqlOperation} from 'aws-amplify'
+import { Auth } from "aws-amplify";
+import * as mutations from '../../graphql/mutations'
+
 
 // fake data generator
 const getItems = count =>
@@ -60,7 +64,8 @@ const getItems = count =>
     add: 1,
     fragenZahl:`${k}`,
     itemType: '',
-    refID: k
+    refID: k,
+    file:false
   }));
 
   console.log('Jumbo', getItems)
@@ -104,6 +109,8 @@ class App extends Component {
       displaylist:false,
       bocvalue:[],
       plusminus:false,
+      titel:'',
+      beschreibung:'',
       removedItem:[],
       ReserveItems:[{
         id: `item-0`,
@@ -111,11 +118,6 @@ class App extends Component {
         frage1: '',
         frage2: '',
         check: false,
-        
-        //
-        titel: '',
-        //
-
         frage3: [
         {
           count:0,
@@ -125,7 +127,8 @@ class App extends Component {
         add: 1,
         fragenZahl:`x`,
         itemType: '',
-        refID: 'x'
+        refID: 'x',
+        file:false
       }],
       random:1
     };
@@ -340,7 +343,6 @@ FinishAddNewItem = async (result) => {
   }
 
 
-
     RemoveFrageDrei(e, k, Count){
 
       const List=this.state.items
@@ -364,7 +366,8 @@ FinishAddNewItem = async (result) => {
           add: Items.add,
           fragenZahl:Items.fragenZahl,
           itemType: Items.itemType,
-          refID: Items.refID
+          refID: Items.refID,
+          file:Items.file
         }
 
         for (var i = 0 ; i <= Length-2 ; i++) {
@@ -416,6 +419,38 @@ FinishAddNewItem = async (result) => {
         myArray[objIndex].check = false
       } else {
         myArray[objIndex].check = true
+      }
+      
+      
+      //Log object to console again.
+      //console.log("After update: ", myArray[objIndex])
+
+
+      console.log('checkresult2', myArray)
+
+      this.setState({items: myArray})
+      this.setState({ReserveItems: myArray})
+
+
+  }
+
+  UpdateCheckBoxFile(value, e){
+
+    let myArray = this.state.items,
+      
+      //Find index of specific object using findIndex method.    
+      objIndex = myArray.findIndex((obj => obj.id == e));
+
+      console.log('checkresult1', this.state.items)
+      
+      //Log object to Console.
+      //console.log("Before update: ", myArray[objIndex])
+      
+      //Update object's name property.
+      if(value==true){
+        myArray[objIndex].file = false
+      } else {
+        myArray[objIndex].file = true
       }
       
       
@@ -484,6 +519,16 @@ FinishAddNewItem = async (result) => {
       this.setState({ReserveItems: myArray})
   };
 
+  handleChangeTitel = (event) => {
+
+      this.setState({titel: event.target.value})
+  };
+
+  handleChangeBeschreibung = (event) => {
+
+    this.setState({beschreibung: event.target.value})
+};
+
   ResetData = async () => {
     var reset = [{
       id: `item-0`,
@@ -491,9 +536,6 @@ FinishAddNewItem = async (result) => {
       frage1: '',
       frage2: '',
       check: false,
-      //
-      titel: '',
-      //
       frage3: [
       {
         count:0,
@@ -503,7 +545,8 @@ FinishAddNewItem = async (result) => {
       add: 1,
       fragenZahl:`x`,
       itemType: '',
-      refID: 'x'
+      refID: 'x',
+      file:false
     }]
 
     this.setState({
@@ -519,7 +562,133 @@ this.setState({random: 1});
       console.log('mimi')
   }
 
-  SaveData = async () => {}
+
+  CreateFormular = async () => {
+    // Authentication flow is still lacking make sure to correct
+    // Reset
+
+    var randomstring = require("randomstring");
+
+        var k1= randomstring.generate(10);
+
+        var k2= randomstring.generate(4);
+
+
+      var questions= this.state.items.map((rest)=>
+      ({
+        titel: this.state.titel,
+         beschreibung: this.state.beschreibung,
+         titelid: this.state.titel+k1+k2,
+         refID: rest.refID,
+         Frage: rest.frage1,
+         Fragenbeschreibung: rest.frage2,
+         SubFragen: rest.frage3,
+         FragenTyp: rest.itemType,
+         Pflicht: rest.check,
+         Dateinotwendig: rest.file,
+         FragenZahl: rest.add,
+         Erfasser:'Joe'
+      }))
+
+
+      
+
+       const result = await API.graphql(graphqlOperation(mutations.createFragenBatch, {input: questions}))
+
+    //  console.log('Creation', k1)
+    //  console.warn('Creation', result.data)
+
+  }
+
+
+  DeleteQuestion(e, k){
+
+    const List=this.state.items
+   const Length=this.state.items.length
+
+   console.log('length1', this.state.items, Length)
+
+
+
+  const Items = List
+  if (Items) {
+
+    Items.splice(k, 1);
+
+
+     var fixed = []
+
+        for (var i = 0 ; i <= Length-2 ; i++) {
+
+          console.log('length',i)
+
+             fixed.push({
+              id: `item-${i}`,
+              content: `item ${i}`,
+              frage1: Items[i].frage1,
+              frage2: Items[i].frage2,
+              check: Items[i].check,
+              frage3: Items[i].frage3,
+              add: Items[i].add,
+              fragenZahl:`${i}`,
+              itemType: Items[i].itemType,
+              refID: i,
+              file:Items[i].file
+            });
+
+            console.log('length23', fixed)
+         }
+
+        console.log('length2', Items, fixed)
+
+
+    
+  }
+  else {
+      // Do something intelligent if the recipe is not found
+  }
+
+  if(fixed.length==0){
+    this.setState({random: 1});
+
+    var reset = [{
+      id: `item-0`,
+      content: `item x`,
+      frage1: '',
+      frage2: '',
+      check: false,
+      frage3: [
+      {
+        count:0,
+        value:''
+      }
+      ],
+      add: 1,
+      fragenZahl:`x`,
+      itemType: '',
+      refID: 'x',
+      file:false
+    }]
+
+    this.setState({
+      items: getItems(0)
+    })
+
+  this.setState({
+    ReserveItems: reset
+    })
+
+  }else{
+
+     this.setState({items:fixed})
+     this.setState({ReserveItems:fixed})
+
+  }
+
+  
+
+
+}
 
 
   // Normally you would want to split things out into separate components.
@@ -532,8 +701,8 @@ this.setState({random: 1});
         <>
 
         <div name='TitelundBeschreibungsContainer'>
-            <TextField id="standard-basic" placeholder="Titel" style={{width: '100%', marginTop: 15}}/>
-            <TextField id="standard-basic" multiline InputProps={{ disableUnderline: true }} placeholder="Beschreibung" style={{width: '50%', left: '0%'}}/>
+            <TextField onChange={(data)=>this.handleChangeTitel(data)} id="standard-basic" placeholder="Titel" style={{width: '100%', marginTop: 15}}/>
+            <TextField onChange={(data)=>this.handleChangeBeschreibung(data)} id="standard-basic" multiline InputProps={{ disableUnderline: true }} placeholder="Beschreibung" style={{width: '50%', left: '0%'}}/>
 
         </div>
          {this.state.items.length==0?
@@ -567,7 +736,7 @@ this.setState({random: 1});
                             action={
                                 <>
 
-                                <Button endIcon={<DeleteForeverSharpIcon/>} color="primary">
+                                <Button onClick={()=>this.DeleteQuestion(item.id, item.refID)} endIcon={<DeleteForeverSharpIcon/>} color="primary">
                                 Löschen
                                 </Button>
                                 {this.state.plusminus && this.state.bocvalue.includes(item.id) && !this.state.removedItem.includes(item.id) && 
@@ -711,6 +880,20 @@ this.setState({random: 1});
                             </>
                             }
 
+
+                            {
+
+                            <>
+                            <Divider style={{ background: 'white'}} ></Divider>
+                            <FormControlLabel
+                              onChange={()=>this.UpdateCheckBoxFile(item.file, item.id)}
+                              control={<Checkbox checked={item.file} name="checkedA" />}
+                              label="Dateien?"
+                              style={{ marginLeft:'2%'}}/>
+
+                            </>
+                            }
+
                             </CardContent>
                             </>
                             }
@@ -834,7 +1017,7 @@ this.setState({random: 1});
             variant="contained" 
             color="primary" 
             style={{marginLeft: 300, marginTop: 5 }} 
-            onClick={()=>this.SaveData()}>
+            onClick={()=>this.CreateFormular()}>
                 Speichern
             </Button>
 

@@ -1,0 +1,50 @@
+type Fragen @aws_cognito_user_pools @model{
+id: ID!
+titel: String
+beschreibung: String
+titelid: String
+refID: String
+Frage: String
+Fragenbeschreibung: String
+SubFragen: [String]
+FragenTyp: String
+Pflicht: Boolean
+Dateinotwendig: Boolean 
+FragenZahl: String
+Erfasser:String
+}
+
+type Fragen2 @aws_cognito_user_pools @model{
+id: ID!
+Fragen:  [String]
+}
+
+type Antworten @aws_api_key @aws_cognito_user_pools @model{
+id: ID!
+titel: String
+FragenId: String 
+Bestaetigung: String
+titelid: String
+refID: String
+FragenAntwort: String
+SubFragenAntwort: [String]
+FragenZahl: String
+Vorname: String
+Nachname: String
+Email: String
+Control: [String]
+AntwortID: ID!
+Dateien: S3Object
+}
+
+type S3Object {
+	bucket: String!
+	region: String!
+	key: String!
+}
+
+
+enum Visibility {
+	public
+	private
+}

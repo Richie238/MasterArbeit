@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-masterarbeit-dev-94223-authRole",
+      "UnauthRoleArn": "arn:aws:iam::819063670687:role/amplify-masterarbeit-dev-94223-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::819063670687:role/amplify-masterarbeit-dev-94223-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-masterarbeit-dev-94223-deployment",
+      "UnauthRoleName": "amplify-masterarbeit-dev-94223-unauthRole",
+      "StackName": "amplify-masterarbeit-dev-94223",
+      "StackId": "arn:aws:cloudformation:eu-central-1:819063670687:stack/amplify-masterarbeit-dev-94223/5274daa0-070a-11ec-bdf5-0a35ad70f8f0",
+      "AmplifyAppId": "d3niwd15mp7143"
+    },
+    "categories": {
+      "auth": {
+        "masterarbeit0ca3544b": {}
+      }
+    }
+  }
+}

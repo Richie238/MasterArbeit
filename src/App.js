@@ -5,8 +5,8 @@ import Navigation from './Hauptprojekt/Navigation'
 function App() {
   return (
     <>
-    <Navigation/>
-    {/* <Schnittpunkt/> */}
+     <Navigation/> 
+     {/* <Schnittpunkt/>  */}
     </>
   );
 }

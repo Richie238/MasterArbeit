@@ -27,7 +27,7 @@ class Formular extends React.Component{
 
 <Card style={{width: '100%', height: 400}}>
 
-<img src={backgnd} style={{position:'realtive'}}/>
+<img src={backgnd} style={{position:'realtive', width:'100%'}}/>
     </Card>
 
 {/* <img src={backgnd} style={{position:'realtive'}}/>    */}
@@ -40,16 +40,27 @@ class Formular extends React.Component{
         left="10%"
         zIndex="modal"
       >
-        <Paper elevation={6} style={{width: 1200, height: 700, marginTop:300 }}>
+        <Paper elevation={6} style={{width: 1700, height: 1050, marginTop:300 }}>
 
             {/* HIER SOLLEN ALLE TEXTFELDER HIN */}
 
-            <div name="Art der person" style={{marginLeft: 500, marginTop: 50 }}> 
-            <Typography variant="h6" style={{ color: "#ffffff"}} gutterBottom>
-                Person  </Typography>
+
+
+
+
+                <div name="persönliche informationen"> 
+                <TextField id="standard-basic" label="Familienname" defaultValue="Noubissi"style={{ marginRight: '2%', marginLeft: '10%', marginTop:'5%', width: '35%'}}/>
+                <TextField  id="standard-basic" label="Vornamen" defaultValue="Ricardo" style={{ marginLeft: '5%', marginRight: '5%', marginTop:'5%', width: '35%'}} />
+                <TextField id="standard-basic" label="Familienname" defaultValue="Noubissi"style={{ marginRight: '2%', marginLeft: '10%', marginTop:'5%', width: '35%'}}/>
+                <TextField  id="standard-basic" label="Vornamen" defaultValue="Ricardo" style={{ marginLeft: '5%', marginRight: '5%', marginTop:'5%', width: '35%'}} />
+                <TextField id="standard-basic" label="Familienname" defaultValue="Noubissi"style={{ marginRight: '2%', marginLeft: '10%', marginTop:'5%', width: '35%'}}/>
+                <TextField  id="standard-basic" label="Vornamen" defaultValue="Ricardo" style={{ marginLeft: '5%', marginRight: '5%', marginTop:'5%', width: '35%'}} />
+                
+
+
                 </div>
 
-             <div name="persönliche informationen" style={{marginLeft: 500, marginTop: 50 }}> 
+                <div name="persönliche informationen" style={{marginLeft: 500, marginTop: 50 }}> 
                 <TextField
                 id="outlined-helperText"
                 label="Fanileinname"
@@ -57,6 +68,17 @@ class Formular extends React.Component{
                 helperText="Text eingeben"
                 />
                 </div>
+
+                <div name="persönliche informationen" style={{marginLeft: 500, marginTop: 50 }}> 
+                <TextField required id="standard-required" label="Required" defaultValue="Hello World" />
+                <TextField required id="standard-required" label="Required" defaultValue="Hello World" />
+                  
+                </div>
+
+
+
+
+
 
                 </Paper>
       </Box>

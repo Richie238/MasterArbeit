@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "masterarbeit",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authmasterarbeit0ca3544b",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
